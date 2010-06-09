@@ -21,21 +21,32 @@ class Waitress < Sinatra::Base
     erb :usage
   end
   
-  # GET /B2-E7-D1-A7-61-9D
   get '/:mac_address' do
     content_type 'application/json'
-    find_mac_address( params[:mac_address] )
+    find_order( params[:mac_address] )
   end
 
-  post '/:mac_address' do
-    if params[:node]
-      create_mac_pairing params[:mac_address], params[:node]
+  post '/' do
+    content_type 'application/json'
+    if params[:mac_address] and params[:node]
+      take_order params[:mac_address], params[:node]
+      erb "{\"Status\": \"Order up for #{params[:mac_address]}.\"}"
     else
-      halt 500, 'Malformated order.'
+      halt 500, "{\"Status\": \"Malformated order. I need a mac_address and a node json to take your order.\"}"
     end
   end
   
-  def find_mac_address(mac_address)
-    redis.get( mac_address )
+  def find_order( mac_address )
+    order = redis.get( mac_address )
+    if order
+      redis.del( mac_address )
+      return order
+    else
+      halt 404, "{\"Status\": \"Are you sure you have an order up?  I can\'t seem to find it.\"}"
+    end
+  end
+  
+  def take_order( mac_address, node )
+    redis.set(mac_address, node)
   end
 end
