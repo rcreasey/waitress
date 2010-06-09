@@ -2,12 +2,12 @@ include GodHelper
 
 God.watch do |w|
   w.name  = "waitress"
-  w.group = 'waitress'
+  w.group = 'waitress-group'
   w.autostart = true
 
-  w.start     = "/usr/bin/rackup --pid /var/run/waitress.pid -p 8000 --env production -D /z/distro/waitress/config.ru"
-  w.stop      = "kill `cat /var/run/waitress.pid`"
-  w.restart   = "kill `cat /var/run/waitress.pid`; /usr/bin/rackup --pid /var/run/waitress.pid -p 8000 --env production -D /z/distro/waitress/config.ru"
+  w.start     = "/usr/bin/thin -C /z/distro/waitress/config.yml -R /z/distro/waitress/config.ru start"
+  w.stop      = "/usr/bin/thin -C /z/distro/waitress/config.yml -R /z/distro/waitress/config.ru stop"
+  w.restart   = "/usr/bin/thin -C /z/distro/waitress/config.yml -R /z/distro/waitress/config.ru restart"
   w.pid_file  = "/var/run/waitress.pid"
   w.grace     = 10.seconds
  

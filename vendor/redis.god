@@ -2,7 +2,7 @@ include GodHelper
 
 God.watch do |w|
   w.name  = "redis"
-  w.group = 'redis'
+  w.group = 'waitress-group'
   w.autostart = true
 
   w.start     = "/usr/local/redis/redis-server /z/distro/waitress/vendor/redis.conf"
