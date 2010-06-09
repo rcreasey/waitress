@@ -1,0 +1,11 @@
+%html
+  %head
+    %title Waitress Order List
+  %body
+
+#header
+  %h1 Waitress Current Orders
+#content
+  %ul
+    - orders.each do |order|
+      %li= order

@@ -1,6 +1,6 @@
 require 'sinatra/base'
 require 'sinatra/redis'
-require 'ruby-debug'
+require 'haml'
 
 class Waitress < Sinatra::Base
   def self.redis
@@ -17,6 +17,11 @@ class Waitress < Sinatra::Base
   end
   
   get '/' do
+    content_type 'text/html', :charset => 'utf-8'
+    haml :list, :locals => {:orders => redis.keys}
+  end
+  
+  get '/usage' do
     content_type 'text/plain', :charset => 'utf-8'
     erb :usage
   end
@@ -32,7 +37,7 @@ class Waitress < Sinatra::Base
       take_order params[:mac_address], params[:node]
       erb "{\"Status\": \"Order up for #{params[:mac_address]}.\"}"
     else
-      halt 500, "{\"Status\": \"Malformated order. I need a mac_address and a node json to take your order.\"}"
+      halt 500, "{\"Status\": \"Malformed order. I need a mac_address and a node JSON to take your order.\"}"
     end
   end
   
