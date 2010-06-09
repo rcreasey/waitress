@@ -1,7 +1,6 @@
 ---
   environment: production
   chdir: /z/distro/waitress
-  address: 127.0.0.1
   user: root
   group: root
   port: 8000
